@@ -1,6 +1,19 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const knex = require('knex');
+
+// Connect to DB
+const db = knex({
+  client: 'pg',
+  connection: {
+    host : '127.0.0.1',
+    port : 5432,
+    user : 'test-user',
+    password : '123',
+    database : 'smart-brain'
+  }
+});
 
 const app = express();
 
@@ -67,15 +80,19 @@ app.post('/register', (req, res) => {
 	bcrypt.hash(password, null, null, function(err, hash) {
     	console.log(hash);
 	});
-	database.users.push({
-		id: '125',
-		name: name,
-		email: email,
-		entries: 0,
-		joined: new Date(),
+	// retuning - show response or use .then(console.log)
+	db('users')
+		.returning('*')
+		.insert({
+			email: email,
+			name: name,
+			joined: new Date()
+		})
+		.then(users => {
+			res.json(user[0]);			
+		})
+		.catch(err => res.status(400).json('unable to register'))
 	})
-	res.json(database.users[database.users.length-1]);
-})
 
 // :id - grab parameter from get request
 // localhost:3000/profile/123

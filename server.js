@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 // {
 //     "email": "john@gmail.com",
 //     "password": "cookies"
-// }
+// }	
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
 // the same call of function, but (req, res) will send automatically
 app.post('/register', register.handleRegister(db, bcrypt) ) 
@@ -44,6 +44,7 @@ app.post('/register', register.handleRegister(db, bcrypt) )
 // id = 123
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) })
 app.put('/image', (req, res) => { image.handleImage(req, res, db) })
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) })
 
 app.listen(3000, () => {
 	console.log('app is running on port 3000');
